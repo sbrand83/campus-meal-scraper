@@ -3,6 +3,7 @@ click==6.7
 dryscrape==1.0
 EasyProcess==0.2.3
 Flask==0.12
+gunicorn==19.6.0
 itsdangerous==0.24
 Jinja2==2.9.4
 lxml==3.7.2
