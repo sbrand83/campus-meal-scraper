@@ -34,42 +34,17 @@ def get_cafe_menu(date):
         headers.append(soup.select(meal_panel + " " +  heading_selector))
 
     # get the hours of each meal
-    hours_list = soup.select(hours_selector)
-    hours_json = BeautifulSoup(str(hours_list), 'html.parser')
-    import ipdb; ipdb.set_trace()
-    print(hours_json.find_all('li')[0])
-    hours_json = hours_json.li['data-json']
-
-    hours_json = json.loads(hours_json)
-
-    meal_hours = list()
-    for i in range(len(meal_panels)):
-        if meal_panels[i] == [] or not date == "":
-            continue;
-
-        # only want the HH:MM am - HH:MM pm part
-        hours_text = hours_json['dayparts'][i]['status']
-        match = re.search('\d{1,2}:\d{2}.*-.*\d{1,2}:\d{2}_\D{2}', hours_text)
-
-        if match:
-            hours = match.string[match.start():match.end()]
-            hours = hours.replace("_", " ")
-            meal_hours.append(hours)
+    meal_info = get_meal_name_and_hours(hours_selector, soup)
 
     meals = []
     for i in range(len(meal_panels)):
         if meal_panels[i] == []:
             continue;
 
-        # get meal name
         meal_dict = {"name": "", "hours": "", "items": []}
-        meal_name = BeautifulSoup(str(headers[i]), 'html.parser')
-        meal_dict["name"] = meal_name.h2.get_text()
 
-        if len(meal_hours) != 0:
-            meal_dict['hours'] = meal_hours[i]
-        else:
-            meal_dict['hours'] = ""
+        meal_dict['hours'] = meal_info[i]['hours']
+        meal_dict['name'] = meal_info[i]['name']
 
         # get each item's name, icons, and calories
         for item in meal_panels[i]:
@@ -90,3 +65,19 @@ def get_cafe_menu(date):
         meals.append(meal_dict)
 
     return meals
+
+def get_meal_name_and_hours(selector, page):
+    hours_list = page.select(selector)
+    hours_json = BeautifulSoup(str(hours_list), 'html.parser')
+    hours_json = hours_json.ul.find_all('li')
+    meal_info = []
+    for element in hours_json:
+        spans = element.find_all('span')
+        meal = dict({"name": spans[0].get_text(), "hours": spans[1].get_text()})
+        match = re.search('\d{1,2}:\d{2}.*-.*\d{1,2}:\d{2} \D{2}', meal['hours'])
+
+        if match:
+            hours = match.string[match.start():match.end()]
+            meal['hours'] = hours
+        meal_info.append(meal)
+    return meal_info
