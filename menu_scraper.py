@@ -5,7 +5,7 @@ import sys
 from selenium import webdriver
 
 def get_cafe_menu(date):
-    url = "http://rose-hulman.cafebonappetit.com/cafe/"
+    url = "http://rose-hulman.cafebonappetit.com/cafe/cafe/"
 
     driver = webdriver.PhantomJS()
 
@@ -25,7 +25,7 @@ def get_cafe_menu(date):
 
     heading_selector = ".daypart-header .panel-title"
     items_selector = "article .daypart-menu .column article"
-    hours_selector = "#panel-cafe-hours .all-cafe-hours li"
+    hours_selector = "#panel-cafe-hours .cafe-details ul"
 
     meal_panels = list()
     headers = list()
@@ -34,8 +34,10 @@ def get_cafe_menu(date):
         headers.append(soup.select(meal_panel + " " +  heading_selector))
 
     # get the hours of each meal
-    hours_panel = soup.select(hours_selector)
-    hours_json = BeautifulSoup(str(hours_panel), 'html.parser')
+    hours_list = soup.select(hours_selector)
+    hours_json = BeautifulSoup(str(hours_list), 'html.parser')
+    import ipdb; ipdb.set_trace()
+    print(hours_json.find_all('li')[0])
     hours_json = hours_json.li['data-json']
 
     hours_json = json.loads(hours_json)
