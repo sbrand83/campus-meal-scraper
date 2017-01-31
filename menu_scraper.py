@@ -18,8 +18,7 @@ def get_all_locations(date):
     for location in locations:
         mealtimes = get_location_meal_times(location['url_path'], date)
         loc = {"name": location['name'], "mealTimes": mealtimes}
-        location = {"location": loc}
-        location_data.append(location)
+        location_data.append(loc)
 
     return location_data
 
@@ -94,8 +93,6 @@ def get_page_html(url):
     menu_page = driver.page_source
     driver.close()
     return menu_page
-
-
 
 def get_meal_name_and_hours(selector, page):
     hours_list = page.select(selector)
