@@ -18,7 +18,8 @@ def get_all_locations(date):
     for location in locations:
         mealtimes = get_location_meal_times(location['url_path'], date)
         loc = {"name": location['name'], "mealTimes": mealtimes}
-        location_data.append(loc)
+        location = {"location": loc}
+        location_data.append(location)
 
     return location_data
 
