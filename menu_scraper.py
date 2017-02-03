@@ -3,6 +3,13 @@ import json
 import re
 from selenium import webdriver
 
+def write_data_to_file(data, date):
+    filename = 'data/data-location-' + date + '.json'
+    f = open(filename, 'w')
+    json_data = json.dumps(data, indent=4, separators=(',', ': '))
+    f.write(json_data)
+    f.close()
+
 def get_all_locations(date):
     locations = [
         {"name": "Union Cafe", "url_path": "cafe/"},
