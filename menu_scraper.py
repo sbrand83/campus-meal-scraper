@@ -2,9 +2,13 @@ from bs4 import BeautifulSoup
 import json
 import re
 from selenium import webdriver
+import os.path
+
+base_filepath = 'data/data-location-'
 
 def write_data_to_file(data, date):
-    filename = 'data/data-location-' + date + '.json'
+    filename = base_filepath + date + '.json'
+    print("Writing data to " + filename)
     f = open(filename, 'w')
     json_data = json.dumps(data, indent=4, separators=(',', ': '))
     f.write(json_data)
@@ -116,3 +120,11 @@ def get_meal_name_and_hours(selector, page):
             meal['hours'] = hours
         meal_info.append(meal)
     return meal_info
+
+def check_if_cached( date):
+    return os.path.isfile(base_filepath + date + '.json')
+
+def read_data_file(date):
+    data_file = open(base_filepath + date + '.json', 'r')
+    return json.load(data_file)
+
