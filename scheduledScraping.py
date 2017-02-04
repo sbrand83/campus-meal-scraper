@@ -22,7 +22,7 @@ def scrape_site():
         current_date = new_date
 
     for day in dates:
-        print('Requesting ' + url + day)
+        print('Requesting ' + url + day + '/')
         urllib2.urlopen(url + day + '/')
 
 if __name__ ==  "__main__":
